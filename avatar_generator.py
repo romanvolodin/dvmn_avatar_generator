@@ -1,7 +1,7 @@
 from PIL import Image
 
 
-def channels_shift(image, shift=25):
+def shift_channels(image, shift=25):
     width, height = image.size
     r, g, b = image.split()
     r_crop = r.crop((shift, 0, width+shift, height))
@@ -14,15 +14,15 @@ def crop_horizontal(image, crop_width=25):
     return image.crop((crop_width, 0, width-crop_width, height))
 
 
-def avatar_generator(img, output_size=(80, 80)):
-    image = Image.open(img)
+def avatar_generator(input_image, output_size=(80, 80)):
+    image = Image.open(input_image)
     width, height = image.size
     if image.mode != 'RGB':
         image = image.convert('RGB')
-    compose = channels_shift(image)
-    cropped = crop_horizontal(compose)
-    cropped.thumbnail(output_size, resample=Image.LANCZOS)
-    return cropped
+    shifted_channels_image = shift_channels(image)
+    cropped_image = crop_horizontal(shifted_channels_image)
+    cropped_image.thumbnail(output_size, resample=Image.LANCZOS)
+    return cropped_image
 
 
 if __name__ == "__main__":
